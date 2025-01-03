@@ -2,9 +2,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddOpenApi()
-    .AddCors(corsOptions => { corsOptions.AddDefaultPolicy(policy => { policy.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader().AllowCredentials(); }); });
+    .AddCors(corsOptions => { corsOptions.AddDefaultPolicy(policy => { policy.WithOrigins([
+        "http://localhost:3000",
+        "https://localhost:3000",
+        "http://localhost:5000",
+        "https://localhost:5000"
+    ]).AllowAnyMethod().AllowAnyHeader().AllowCredentials(); }); });
 
 var app = builder.Build();
+    
+app.UseCors();
 
 app.MapOpenApi();
 
