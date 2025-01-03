@@ -30,11 +30,34 @@ export async function middleware(request: NextRequest) {
     },
   })
     .then(res => {
-      console.log(`Response from middleware, Set-Cookie: ${res.headers["set-cookie"]}`)
+      console.log(`Response from middleware via Axios, Set-Cookie: ${res.headers["set-cookie"]}`)
     })
     .catch(err => {
       console.log(err)
     })
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/TestMethod`, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: 'include' // This ensures cookies are included in cross-origin requests
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const setCookieHeader = response.headers.get("set-cookie");
+      console.log(`Response from middleware via Fetch, Set-Cookie: ${setCookieHeader}`);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  await fetchData()
 
   return NextResponse.next()
 }
